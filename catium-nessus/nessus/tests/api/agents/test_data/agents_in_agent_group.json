@@ -1,0 +1,37 @@
+[{
+    "platform": "WINDOWS",
+    "distro": "win-x86-64",
+    "ui_version": "7.4.1",
+    "ui_build": "100",
+    "ips": {
+        "v4": ["1.0.0.1"],
+        "v6": ["1.0.0.1"]
+    },
+    "name": "automation_agent_1",
+    "groups": ["automation_agent_group"],
+    "loaded_plugin_set": "202010061018"
+}, {
+    "platform": "LINUX",
+    "distro": "ubuntu1110-x86-64",
+    "ui_version": "7.4.2",
+    "ui_build": "100",
+    "ips": {
+        "v4": ["1.0.0.2"],
+        "v6": ["1.0.0.2"]
+    },
+    "name": "automation_agent_2",
+    "loaded_plugin_set": "202010061018",
+    "groups": ["automation_agent_group"]
+}, {
+    "platform": "DARWIN",
+    "distro": "macosx",
+    "ui_version": "7.4.0",
+    "ui_build": "100",
+    "ips": {
+        "v4": ["1.0.0.3"],
+        "v6": ["1.0.0.3"]
+    },
+    "name": "automation_agent_3",
+    "loaded_plugin_set": "202010061018",
+    "groups": ["automation_agent_group"]
+}]

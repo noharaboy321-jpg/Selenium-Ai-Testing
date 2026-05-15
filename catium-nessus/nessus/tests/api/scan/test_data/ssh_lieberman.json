@@ -1,0 +1,19 @@
+{
+    "add": {
+        "Host": {
+            "SSH":[{
+              "auth_method": "Lieberman",
+              "lieberman_system_name": "",
+              "lieberman_verify_ssl": "yes",
+              "lieberman_use_ssl": "yes",
+              "lieberman_pam_password": "test",
+              "lieberman_pam_user": "test",
+              "lieberman_port": "443",
+              "lieberman_host": "test",
+              "username": "test"
+            }]
+        }
+    },
+    "edit": {},
+    "delete":[]
+}

@@ -1,0 +1,32 @@
+{
+    "plugin_attributes": [{
+        "id": "testing_1",
+        "name": "Testing text attribute",
+        "regex": ".*",
+        "hint": "TEXT",
+        "type": "entry"
+    }, {
+        "id": "testing_2",
+        "name": "Testing score attribute",
+        "regex": "^[0-9]+(\\.[0-9]+)$",
+        "hint": "4.2",
+        "type": "score"
+    }, {
+        "id": "testing_3",
+        "name": "Testing list attribute",
+        "values": ["list value 1", "list value 2", "list value 3"],
+        "type": "list"
+    }, {
+        "id": "testing_4",
+        "name": "Testing true/false list attribute",
+        "values": ["true", "false"],
+        "type": "list"
+    },  {
+        "id": "testing_5",
+        "name": "Testing date attribute",
+        "regex": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+        "hint": "YYYY-MM-DD",
+        "type": "date"
+    }]
+}
+

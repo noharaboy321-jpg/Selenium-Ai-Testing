@@ -1,0 +1,295 @@
+@Library('tenable.common')
+import com.tenable.jenkins.*
+import com.tenable.jenkins.builds.*
+import com.tenable.jenkins.Constants
+import com.tenable.jenkins.common.Common
+import com.tenable.jenkins.common.Logger
+import groovy.transform.Field
+
+@Field Logger logger = new Logger(this, 'installAmiPlugins', Constants.LOG_LEVEL_DEBUG)
+
+def projectProperties = [
+    [$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', numToKeepStr: '100']], disableResume(),
+    [$class: 'ParametersDefinitionProperty',
+        parameterDefinitions: [
+            // ===========================================
+            // AMI CONFIGURATION
+            // ===========================================
+            [$class: 'ChoiceParameterDefinition', name: 'AMI Configuration Section', choices: ['───────────────'],
+                description: '<h3 style="color: #4CAF50; border-bottom: 2px solid #4CAF50; padding-bottom: 5px; margin: 0;">🖥️ AMI CONFIGURATION</h3>'],
+
+            [$class: 'ChoiceParameter',
+                name: 'Target OS',
+                choiceType: 'PT_CHECKBOX',
+                description: 'Select one or more target operating systems',
+                filterable: true,
+                filterLength: 1,
+                script: [$class: 'GroovyScript',
+                    fallbackScript: [classpath: [], sandbox: true,
+                        script: '''return ['amazonlinux:selected', 'amazonlinux2023:selected', 'amazonlinux2023arm:selected', 'amazonlinuxarm:selected', 'centos7:selected', 'centos9stream:selected', 'debian12:selected', 'miraclelinux9', 'oraclelinux8:selected', 'oraclelinux9', 'rhel8-arm:selected', 'rhel9-arm', 'ubuntu20', 'ubuntu22', 'ubuntu22arm', 'ubuntu24', 'ubuntu24arm', 'windows2019']'''],
+                    script: [classpath: [], sandbox: true,
+                        script: '''return ['amazonlinux:selected', 'amazonlinux2023:selected', 'amazonlinux2023arm:selected', 'amazonlinuxarm:selected', 'centos7:selected', 'centos9stream:selected', 'debian12:selected', 'miraclelinux9', 'oraclelinux8:selected', 'oraclelinux9', 'rhel8-arm:selected', 'rhel9-arm', 'ubuntu20', 'ubuntu22', 'ubuntu22arm', 'ubuntu24', 'ubuntu24arm', 'windows2019']''']
+                ]
+            ],
+
+            [$class: 'StringParameterDefinition', name: 'Additional Target OS', defaultValue: '',
+                description: '<em>[Optional]</em> Additional OS targets not in the list above (comma-separated). Note, these may not be supported and may cause environment setup to fail<br/><code>Examples: fedora38, suse15, rhel10-arm</code>'],
+
+            [$class: 'StringParameterDefinition', name: 'Nessus Version',
+                description: 'Comma-separated list of Nessus version numbers<br/><code>Examples: 10.8.4, 10.9.0</code> Base AMIs may not exist for all version/OS combinations',
+                defaultValue: '10.8.4, 10.11.1'],
+
+            // ===========================================
+            // LICENSE SELECTION
+            // ===========================================
+            [$class: 'ChoiceParameterDefinition', name: 'License Selection Section', choices: ['───────────────'],
+                description: '<h3 style="color: #9C27B0; border-bottom: 2px solid #9C27B0; padding-bottom: 5px; margin: 0; margin-top: 15px;">🔑 LICENSE SELECTION</h3>'],
+
+            [$class: 'ChoiceParameter',
+                name: 'Nessus Licenses',
+                choiceType: 'PT_CHECKBOX',
+                description: 'Select one or more Nessus license types to bake into AMIs',
+                filterable: true,
+                filterLength: 1,
+                script: [$class: 'GroovyScript',
+                    fallbackScript: [classpath: [], sandbox: true,
+                        script: '''return ['Essentials', 'Essentials Plus', 'Professional:selected', 'Manager', 'Expert']'''],
+                    script: [classpath: [], sandbox: true,
+                        script: '''return ['Essentials', 'Essentials Plus', 'Professional:selected', 'Manager', 'Expert']''']
+                ]
+            ],
+
+            // ===========================================
+            // PLUGINSET CONFIGURATION
+            // ===========================================
+            [$class: 'ChoiceParameterDefinition', name: 'Pluginset Configuration Section', choices: ['───────────────'],
+                description: '<h3 style="color: #00BCD4; border-bottom: 2px solid #00BCD4; padding-bottom: 5px; margin: 0; margin-top: 15px;">🔌 PLUGINSET CONFIGURATION</h3>'],
+
+            [$class: 'StringParameterDefinition', name: 'Pluginset Lookback (Days)', defaultValue: '1',
+                description: 'Number of days to look back to find the latest pluginset to install'],
+
+            [$class: 'StringParameterDefinition', name: 'Pluginset Feed Serial',
+                description: '<em>[Optional]</em> Overrides Pluginset Lookback. Specific serial number of a pluginset to install on AMI(s)'],
+
+            [$class: 'StringParameterDefinition', name: 's3 Bucket', defaultValue: 's3://eng-dev-tenable-common-us-east-1/feed-prod/',
+                description: 'S3 bucket to retrieve pluginsets from. The Jenkins AWS user may not have access to all buckets'],
+
+            // ===========================================
+            // DEBUG & LOGGING
+            // ===========================================
+            [$class: 'ChoiceParameterDefinition', name: 'Debug Section', choices: ['───────────────'],
+                description: '<h3 style="color: #607D8B; border-bottom: 2px solid #607D8B; padding-bottom: 5px; margin: 0; margin-top: 15px;">🐛 DEBUG & LOGGING</h3>'],
+
+            [$class: 'BooleanParameterDefinition', name: 'Verbose',
+                description: 'Enable verbose logging output for test execution'],
+        ]
+    ]
+]
+
+properties(projectProperties)
+
+// Target OS
+String targetOSParam = params['Target OS'] ?: ''
+String additionalTargetOS = params['Additional Target OS'] ?: ''
+List nessusTargetOS = []
+if (targetOSParam) {
+    nessusTargetOS.addAll(targetOSParam.replaceAll(' ', '').split(',').findAll { it })
+}
+if (additionalTargetOS) {
+    nessusTargetOS.addAll(additionalTargetOS.replaceAll(' ', '').split(',').findAll { it })
+}
+nessusTargetOS = nessusTargetOS.unique()
+
+List nessusVersion = params['Nessus Version'].replaceAll(' ', '').split(',')
+
+// License Types - parse from multi-select checkbox and map to internal nessusType values
+String licensesParam = params['Nessus Licenses'] ?: ''
+List selectedLicenses = licensesParam.split(',').collect { it.trim() }.findAll { it }
+Map licenseTypeMap = [
+    'Essentials': 'home',
+    'Essentials Plus': 'essentials_plus',
+    'Professional': 'pro',
+    'Manager': 'manager',
+    'Expert': 'expert'
+]
+List nessusLicenseTypes = selectedLicenses.collect { licenseTypeMap[it] }.findAll { it }
+if (nessusLicenseTypes.size() == 0) {
+    error "No Nessus license was selected. Please select at least one license type."
+}
+logger.info("Selected licenses: ${nessusLicenseTypes}")
+
+List pluginsetLookbacks = params['Pluginset Lookback (Days)'].replaceAll(' ', '').split(',')
+String pluginsetFeedSerial = params['Pluginset Feed Serial'] ?: null
+String s3Bucket = params['s3 Bucket']
+Boolean verbose = params['Verbose']
+awsRole = "arn:aws:iam::713009024176:role/ADM-Build-nessus-automation"
+String pluginServer = 'plugins-internal-staging.cloud.aws.tenablesecurity.com'
+
+List s3BucketOutput
+node('docker') {
+    stage("Getting list of pluginsets") {
+        withAWS(role: awsRole, region: "us-east-1") {
+            s3BucketOutput = sh (script: "aws s3 ls ${s3Bucket}", returnStdout: true).replaceAll("\\s*PRE ", "").split("/")
+        }
+    }
+}
+
+List pluginsetFeedSerials = []
+if (pluginsetFeedSerial) {
+    pluginsetFeedSerials = pluginsetFeedSerial.replaceAll(' ', '').split(',')
+}
+
+List pluginsetLookupValues = []
+Date today = new Date()
+if (pluginsetFeedSerials == []) {
+    pluginsetLookbacks.each{ String lookback ->
+        lookbackInteger = lookback.toInteger()
+        pluginsetLookupValues.add(today.plus(-lookbackInteger).format('yyyyMMdd'))
+    }
+} else {
+    pluginsetFeedSerials.each{ String pluginsetSerial ->
+        pluginsetLookupValues.add(pluginsetSerial)
+    }
+}
+
+logger.info("Finding pluginset in S3 using values: ${pluginsetLookupValues}")
+
+List matchingPluginsetIds = []
+List pluginsetIds = []
+pluginsetLookupValues.each {pluginsetLookupValue ->
+    s3BucketOutput.each {pluginsetSerial ->
+        if (pluginsetSerial.contains(pluginsetLookupValue)) {
+            matchingPluginsetIds.add(pluginsetSerial)
+        }
+    }
+
+    if (matchingPluginsetIds.size() == 0) {
+        error("No pluginsets found in S3 bucket ${s3Bucket} with the date ${pluginsetLookupValue}.")
+    } else {
+        pluginsetIds.add(matchingPluginsetIds.last())
+    }
+}
+
+Common common = new Common(this)
+
+BuildParams defaultParams = new BuildParams(this)
+
+// set Nessus build branch to display on Jenkins build page
+List buildDescription = ["<h5> ${nessusVersion} </h5>"]
+this.currentBuild.description = common.getCauseDescriptions()
+this.currentBuild.description += '\n' + buildDescription.join('\n')
+currentBuild.displayName += "@ ${nessusTargetOS.toString()}_${nessusVersion}_generate_ami"
+
+List nessusInstances = []
+
+pluginsetIds.each { String pluginsetId ->
+    nessusLicenseTypes.each { String nessusLicense ->
+        nessusVersion.each { String version ->
+            nessusTargetOS.each { targetOS ->
+                timestamp = new Date().format("yyyyMMddHHmmss")
+                sleep(2)
+
+                String currentAmiName = "preconfigured-nessus-${version}-${targetOS}-${nessusLicense}-${timestamp}"
+
+                Map nessusInstance = ["amiName": currentAmiName, "os": targetOS, "type": nessusLicense, "nessusVersion": version, "pluginsetId": pluginsetId]
+                nessusInstances.add(nessusInstance)
+            }
+        }
+    }
+}
+
+logger.debug("Nessus instances: ${nessusInstances}")
+
+Map amis = [:]
+
+stage("Launching AMIs and installing pluginset") {
+    nessusInstances.each { Map config ->
+        if (config.downloadFilename && config.downloadFilename.contains('.invalid')) {
+            throw new Exception("${config.os} is not configured in the pipeline")
+        }
+        logger.debug("Nessus data: ${config}")
+
+        Boolean arm = false
+        switch (config.os) {
+            case ~/.*arm.*/:
+                arm = true
+                break
+            default:
+                arm = false
+                break
+        }
+
+        amis["${config.os}_${config.type}_${config.nessusVersion}_${config.pluginsetId}"] = {
+            node(Constants.M42XL_AE_PROD_TESTING) {
+                BuildsCommon buildsCommon = new BuildsCommon(this)
+                buildsCommon.cleanup()
+
+                String instance_type = "c5.xlarge"
+                if (arm) {
+                    instance_type = "c6g.xlarge"
+                }
+
+                String awsSubnetId = 'subnet-0cb3da8373107b8a5'
+                String awsInstanceSecurityGroup = ''
+
+                logger.info("Starting On-Demand test environment")
+                withOnDemandTestEnv(
+                    OS: config.os,
+                    awsInstanceType: instance_type,
+                    awsRole: awsRole,
+                    instanceCount: 1,
+                    diskSize: 80,
+                    playbookExtraVars: ['user_data_wait': '45', 'plugin_server_host': pluginServer, 'plugin_server_api': "https://${pluginServer}/keygen/json.generate.php"],
+                    nessusType: config.type,
+                    productVersion: config.nessusVersion,
+                    pluginsetTagId: 'none',
+                    pluginsetFeedSerial: config.pluginsetId,
+                    product: 'nessus',
+                    instanceSubnetId: awsSubnetId,
+                    awsSecurityGroup: awsInstanceSecurityGroup,
+                    nessusUpdatePlugins: 'no',
+                    nessusPluginsetInstall: true,
+                    nessusPluginsetPath: "${s3Bucket}${config.pluginsetId}/plugins.tar.gz",
+                    preconfiguredAmi: true,
+                    createAmi: true,
+                    amiName: config.amiName,
+                    verbose: verbose,
+                    tags: ['product': 'nessus', 'nessusVersion': config.nessusVersion, 'os': config.os, 'type': config.type, 'pluginset': config.pluginsetId],
+                )   {
+                    logger.info("Nessus installed and running on IP ${TEST_ENV_IPS}")
+
+                    stage("Wait for AMI to be created") {
+                        withAWS(role: awsRole, region: "us-east-1") {
+                            Integer i = 0
+                            String amiStatus
+                            timeoutSeconds = 1200
+                            while (true) {
+                                try {
+                                    logger.debug("Checking to see if AMI is finished being created before terminating EC2 instance")
+                                    amiStatus = sh (script: "aws ec2 describe-images --filters 'Name=name,Values=${config.amiName}' --query 'sort_by(Images,&CreationDate)[-1].State'", returnStdout: true)
+                                    assert amiStatus.contains("available") : "AMI is not available yet, waiting 30 seconds to check again"
+                                    logger.info("AMIs are available, terminating EC2 instance")
+                                    break
+                                } catch (AssertionError e) {
+                                    logger.debug("AMI is not available yet, waiting 30 seconds to check again")
+                                    if (i * 30 < timeoutSeconds) {
+                                        logger.debug("Waiting for AMI to be created, attempt ${i}")
+                                        sleep(30)
+                                        i += 1
+                                    } else {
+                                        error("AMI creation timed out after ${timeoutSeconds} seconds")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    logger.debug("AMIs: ${amis.toString()}")
+    parallel(amis)
+}
+
+return this

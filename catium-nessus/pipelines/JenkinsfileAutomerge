@@ -1,0 +1,82 @@
+@Library('tenable.common')
+
+import com.tenable.jenkins.*
+import com.tenable.jenkins.builds.*
+import com.tenable.jenkins.common.*
+import com.tenable.jenkins.Constants
+import com.tenable.jenkins.slack2.Slack
+
+properties([
+    disableConcurrentBuilds(),
+    disableResume(),
+    buildDiscarder(logRotator(daysToKeepStr: '2', numToKeepStr: '14')),
+    pipelineTriggers([cron('H * * * *')]),
+    parameters([
+        stringParam(name: 'RELEASE_BRANCH', description: '', defaultValue: 'release'),
+        stringParam(name: 'NEXT_BRANCH', description: '', defaultValue: 'release-next'),
+        stringParam(name: 'SLACK_CHANNEL', description: '', defaultValue: '#nessus-ci')
+    ])
+])
+
+String slackChannel   = params.SLACK_CHANNEL
+String release_branch = params.RELEASE_BRANCH
+String next_branch    = params.NEXT_BRANCH
+
+Common common             = new Common(this)
+BuildsCommon buildsCommon = new BuildsCommon(this)
+
+// Build parameters
+BuildParams bparams       = new BuildParams(this)
+bparams.channels          = slackChannel
+bparams.bldNotifyType     = Constants.NOTIFY_FIRSTFAILANDRECOVER
+
+// Repository
+String repo = "Product/catium-nessus.git"
+
+try {
+    node(Constants.DOCKERNODE) {
+        buildsCommon.cleanup()
+        stage ("${release_branch} to ${next_branch} merge") {
+            dir("nessus") {
+                git(branch: release_branch, changelog: false,
+                    credentialsId: Constants.GITHUBKEY, poll: false,
+                    url: "${Constants.SSHGITHUB}${repo}")
+                buildsCommon.prepareGit()
+                sshagent([Constants.GITHUBKEY]) {
+                    sh "git config --global push.default matching"
+                    sh "git remote set-url origin ${Constants.SSHGITHUB}${repo}"
+                    sh "git checkout ${next_branch}"
+                    sh "git merge ${release_branch}"
+                    sh "git push"
+                }
+            }
+        }
+    }
+    common.setResultIfNotSet(Constants.JSUCCESS)
+} catch (ex) {
+    common.logException(ex)
+    common.setResultAbortedOrFailure()
+    throw ex
+} finally {
+    common.setResultIfNotSet(Constants.JSUCCESS)
+    node(Constants.DOCKERNODE) {
+        stage(Constants.STAGE_NOTIFY) {
+            if (buildsCommon.shouldSendNotification(bparams)) {
+                Slack slack = new Slack(this)
+
+                String statusMsg = "\nMerge of branch `${release_branch}` to branch `${next_branch}`"
+                String finalStatusMsg
+                if (currentBuild.result == Constants.JSUCCESS) {
+                    finalStatusMsg = "${statusMsg} *COMPLETED*"
+                } else {
+                    finalStatusMsg = "${statusMsg} *FAILED*\nPlease check for merge conflicts or other errors in the Jenkins output"
+                }
+
+                def messageAttachment = slack.helper.getDecoratedFinishMsg(
+                    "Repository merge finished with result: ", finalStatusMsg)
+                messageAttachment.channel = bparams.channels
+                slack.postMessage(messageAttachment)
+            }
+        }
+    }
+}

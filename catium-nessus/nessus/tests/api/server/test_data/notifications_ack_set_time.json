@@ -1,0 +1,23 @@
+{
+    "notifications": [
+        {
+            "id": 11,
+            "title": "modal text",
+            "message": "Sample_notification",
+            "severity": "info",
+            "permanent": false,
+            "type": "modal",
+            "active": "1554244762",
+		    "acknowledge_duration_seconds": 30
+        },
+        {
+            "id": 12,
+            "title": "modal text sample",
+            "message": "General_notification",
+            "severity": "info",
+            "permanent": false,
+            "type": "modal",
+            "active": "1554244762"
+        }
+    ]
+}

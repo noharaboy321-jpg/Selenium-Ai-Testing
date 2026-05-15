@@ -1,0 +1,85 @@
+{
+  "ldap_server": {
+    "ldap_host": "172.26.48.10",
+    "ldap_port": "636",
+    "ldap_username": "Administrator",
+    "ldap_password": "amethyst",
+    "ldap_base_dn": "CN=Users,DC=target,DC=tenablesecurity,DC=com"
+  },
+  "ldap_with_advanced_attributes": {
+    "ldap_host": "172.26.48.10",
+    "ldap_port": "636",
+    "ldap_username": "Administrator",
+    "ldap_password": "amethyst",
+    "ldap_base_dn": "CN=Users,DC=target,DC=tenablesecurity,DC=com",
+    "ldap_username_attribute": "sAMAccountName",
+    "ldap_email_attribute": "mail",
+    "ldap_name_attribute": "CN",
+    "ldap_ca": "AbCd1235%"
+  },
+  "with_attributes": {
+    "ldap_username_attribute": "sAMAccountName",
+    "ldap_email_attribute": "mail",
+    "ldap_name_attribute": "CN",
+    "ldap_ca": "AbCd1235%"
+  },
+  "without_attributes": {
+    "ldap_username_attribute": "",
+    "ldap_email_attribute": "",
+    "ldap_name_attribute": "",
+    "ldap_ca": ""
+  },
+  "bad_ldap_info": {
+    "ldap_host": "172.26.18.51",
+    "ldap_port": "636",
+    "ldap_username": "Administrator",
+    "ldap_password": "amethyst",
+    "ldap_base_dn": "CN=Users,DC=target,DC=tenablesecurity,DC=com",
+    "ldap_username_attribute": "",
+    "ldap_email_attribute": "",
+    "ldap_name_attribute": "",
+    "ldap_ca": ""
+  },
+  "invalid_smtp_info": {
+    "smtp_host": "172.26.18.52",
+    "smtp_port": "25",
+    "smtp_from": "noone@tenable.com",
+    "smtp_enc": "No Encryption",
+    "smtp_www_host": "localhost:8834",
+    "smtp_auth": "NONE",
+    "smtp_test": "severson@tenable.com"
+  },
+  "local_smtp_info": {
+    "smtp_host": "smtp.lab.tenablesecurity.com",
+    "smtp_port": "25",
+    "smtp_user": "None",
+    "smtp_pass": "None",
+    "smtp_from": "test@tenable.com",
+    "smtp_enc": "No Encryption",
+    "smtp_www_host": "localhost:8834",
+    "smtp_auth": "NONE",
+    "smtp_test": "cdombrowskitenable.com"
+  },
+  "default_smtp_settings": {
+    "smtp_host": "",
+    "smtp_port": "",
+    "smtp_user": "",
+    "smtp_pass": "",
+    "smtp_from": "",
+    "smtp_enc": "No Encryption",
+    "smtp_www_host": "",
+    "smtp_auth": "",
+    "smtp_test": ""
+  },
+  "grid_smtp_info": {
+    "smtp_host": "tf-mailcatcher-lb-d212eb4b775ff714.elb.us-east-1.amazonaws.com",
+    "smtp_port": "8025",
+    "smtp_from": "test@tenablesecurity.com",
+    "smtp_enc": "No Encryption",
+    "smtp_www_host": "localhost:8834",
+    "smtp_auth": "NONE",
+    "smtp_user": "None",
+    "smtp_pass": "None",
+    "smtp_test": "test@tenable.com"
+  }
+}

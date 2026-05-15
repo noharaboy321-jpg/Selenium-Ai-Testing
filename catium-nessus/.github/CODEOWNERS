@@ -1,0 +1,7 @@
+# .github/CODEOWNERS
+# This file designates required PR reviewers for this repository
+# https://help.github.com/articles/about-codeowners/
+
+# https://github.eng.tenable.com/orgs/Product/teams/nessus
+*  @Product/nessus @krpatel-ctr @skolla @mdabra @stellex @gdelap
+   @Product/shared-components

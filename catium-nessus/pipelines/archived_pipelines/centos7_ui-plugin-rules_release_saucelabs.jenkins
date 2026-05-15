@@ -1,0 +1,92 @@
+@Library('tenable.common')
+import com.tenable.jenkins.*
+import com.tenable.jenkins.builds.*
+import com.tenable.jenkins.Constants
+import com.tenable.jenkins.common.Common
+
+currentBuild.displayName += "@ oraclelinux8_ui-plugin-rules_release_saucelabs"
+Common common = new Common(this)
+
+String targetOS = "OracleLinux8"
+
+BuildParams defaultParams = new BuildParams(this)
+defaultParams.pytestCreateHtmlReport = false
+defaultParams.pytestOptions = '-p catium.plugins.xdist_variables --reruns=2 --reruns-delay=0 --capabilities \'{"idleTimeout": 900, "maxDuration": 2700}\'  --ignore=nessus/tests/api/scanner_health/test_scanner_health_endpoints.py'
+defaultParams.pytestTestPaths = ['nessus/tests/ui/plugin_rules']
+defaultParams.retryCount = 0
+defaultParams.timeout = 600
+defaultParams.productName         = "Nessus"
+defaultParams.teamName            = "QE-Nessus"
+defaultParams.testCategory        = "REGR"
+defaultParams.suiteType           = "UI"
+defaultParams.platform            = "OracleLinux8"
+
+Map defaultVars = [
+	"CAT_LOG_LEVEL_CONSOLE": "INFO",
+	"CAT_LOG_LEVEL": "DEBUG",
+	"CAT_NESSUS_CLI_LOCAL": "False"
+]
+
+
+Map testsConfig = [
+    'Nessus Manager': [
+        OracleLinux8: [type: "manager", marker: "'nessus_manager and not real_agent and not standalone and not update and not license_change and not browser_file_download'"],
+    ],
+    'Nessus Pro': [
+        OracleLinux8: [type: "pro", marker: "'nessus_pro and not standalone and not license_change and not browser_file_download'"],
+    ],
+    'Nessus Home': [
+        OracleLinux8: [type: "home", marker: "'nessus_home and not standalone and not update and not license_change and not browser_file_download'"],
+    ]
+]
+
+Map testers = [:]
+
+testsConfig.each { String testType, OSConfig ->
+    OSConfig.each { String os, config ->
+        if (os == targetOS) {
+            testers["${testType}_${os}"] = {
+                node(Constants.DOCKERNODE) {
+                    BuildsCommon buildsCommon = new BuildsCommon(this)
+                    buildsCommon.cleanup()
+
+                    withOnDemandTestEnv(
+                        OS: 'oraclelinux8',
+                        awsInstanceType: 'c5.2xlarge',
+                        instanceCount: 2,
+                        diskSize: 80,
+                        playbookExtraVars: ['user_data_wait': '45', 'plugin_server_host': 'plugins-internal-prod.cloud.aws.tenablesecurity.com', 'plugin_server_api': "https://plugins-internal-prod.cloud.aws.tenablesecurity.com/keygen/json.generate.php"],
+                        nessusType: "${config.type}",
+                        packageUrl: 'https://nexus.cloud.aws.tenablesecurity.com/repository/product-release/nessus/release-next/Nessus-release-next-es8.x86_64.rpm',
+                        product: 'nessus'
+                    )   {
+                            echo "Nessus installed and running on IP ${TEST_ENV_IPS}"
+                            stage("${testType}_Tests") {
+
+                                    Map env_vars = defaultVars.clone()
+                                    env_vars = [
+                                        CAT_SITE            : 'manager',
+                                        CAT_SSH_USERNAME    : 'qa', 
+                                        CAT_SSH_USE_SUDO    : 'true',
+                                        CAT_NESSUS_CLI_LOCAL: 'false',
+                                        CAT_NESSUS_VERSION  : config.type
+                                        ]
+
+                                    AutomationDirectBuild builder = new AutomationDirectBuild(this)
+                                    common.copyProperties(defaultParams, builder.parameters)
+                                    builder.parameters.saucelabsCredentialsId = 'nessusUISauceLabs'
+                                    builder.parameters.pytestAWSAutomationRoleDuration = 36000
+                                    builder.parameters.pytestOptions += " -m ${config.marker} --xdist-hosts ${TEST_ENV_IPS}"
+                                    builder.parameters.setPytestParallelName("${config.type}")
+                                    builder.parameters.setAutomationEnvironment(env_vars)
+                                    builder.parameters.pytestSshAgents = ['ODE-privkey']
+                                    builder.execute(createNode: false)
+                                }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+parallel(testers)

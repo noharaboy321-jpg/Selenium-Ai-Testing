@@ -1,0 +1,30 @@
+@Library('tenable.common')
+import com.tenable.jenkins.*
+import com.tenable.jenkins.builds.*
+import com.tenable.jenkins.Constants
+import com.tenable.jenkins.common.Common
+
+Common common = new Common(this)
+
+def projectProperties = [
+    [$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', numToKeepStr: '100']], disableResume(),
+]
+
+properties(projectProperties)
+
+String targetOS = 'ubuntu20'
+String nessusBuildBranch = 'master'
+String catiumBranch = 'master'
+
+def nessusTests
+
+node(Constants.DOCKERNODE) {
+    BuildsCommon buildsCommon = new BuildsCommon(this)
+    buildsCommon.cleanup()
+    checkout scm
+    def rootDir = pwd()
+    echo "Root directory is: ${rootDir}"
+    nessusTests = load "${rootDir}/pipelines/nessuscli_pipelines/nessuscli.groovy"
+}
+
+nessusTests.runNessuscli(targetOS, nessusBuildBranch, catiumBranch)

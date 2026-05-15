@@ -1,0 +1,27 @@
+{
+    "add": {
+        "Database": {
+            "Database":[{
+                "type": "Oracle",
+                "oracle_sid": "test",
+                "oracle_service_type": "SID",
+                "oracle_auth_type": "SYSDBA",
+                "port": 1521,
+                "authtype": "CyberArk",
+                "pam_verify_ssl": "yes",
+                "pam_use_ssl": "yes",
+                "pam_app_id": "test",
+                "pam_private_key_passphrase": "",
+                "pam_private_key": "",
+                "pam_client_cert": "",
+                "pam_username_source": "Username",
+                "pam_safe": "",
+                "pam_port": "443",
+                "pam_host": "test",
+                "username": "test"
+              }]
+        }
+    },
+    "edit": {},
+    "delete":[]
+}

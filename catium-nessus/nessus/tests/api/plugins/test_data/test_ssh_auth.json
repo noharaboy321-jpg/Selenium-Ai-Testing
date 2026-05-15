@@ -1,0 +1,80 @@
+{
+    "thycotic": {
+        "username": "root",
+        "name": "APIsshtest",
+        "url": "http://172.26.22.209/SecretServer",
+        "login": "QA",
+        "password": "Testing3",
+        "target": "172.26.25.98",
+        "private_key": false,
+        "bad_name": "APIsshtestfail",
+        "plugin_id":"97993",
+        "auth_fail":"21745"
+    },
+    "ssh_password": {
+        "username" : "root",
+        "password" : "sapphire",
+        "target" : "172.26.25.98",
+        "plugin_id":"97993"
+    },
+    "kerberos": {
+        "username" : "kuser1",
+        "password" : "LabPass1",
+        "realm" : "NPWCENTOSKERBEROS",
+        "kdc" : "npwkdc.lab.tenablesecurity.com",
+        "target" : "npwkdc.lab.tenablesecurity.com",
+        "bad_username" : "kuser1",
+        "bad_password" : "blah",
+        "plugin_id":"97993",
+        "auth_fail":"21745"
+    },
+    "cyberark": {
+        "target":"172.26.25.98",
+        "username":"root",
+        "host":"172.26.22.204",
+        "safe":"Unix Accounts",
+        "app_id":"Nessus",
+        "folder_id":"Root",
+        "use_ssl":false,
+        "verify_ssl":false,
+        "port":"80",
+        "elevate_privileges":"Nothing",
+        "plugin_id":"97993"
+    },
+    "lieberman": {
+        "target":"172.26.22.243",
+        "host":"172.26.27.78",
+        "port": 80,
+        "ssl": false,
+        "ssl_verify": false,
+        "pam_user": "asd",
+        "pam_password": "zxc",
+        "username": "root",
+        "plugin_id":"97993"
+    },
+    "beyondtrust": {
+        "target":"172.26.25.98",
+        "host":"172.26.26.184",
+        "port": 443,
+        "ssl": true,
+        "ssl_verify": false,
+        "api_key": "4631d11ff54feaa6c6feaff7060ca226d5d8e19ac0d22cf3386741c8eaa31d93fa6ee683cf64ff5715425cd77bf3601bfb9949d2f05f9020987f2a6623155723",
+        "username": "root",
+        "duration_minutes": 0,
+        "try_escalation": false,
+        "plugin_id":"97993"
+    },
+    "public_key": {
+        "plugin_id": "97993",
+        "username": "root",
+        "private_key": "nessus/tests/api/plugins/test_data/ssh_keys/api_pub_key_target_priv_key",
+        "target": "172.26.17.78"
+    },
+    "certificate": {
+        "plugin_id": "97993",
+        "username": "root",
+        "certificate": "nessus/tests/api/plugins/test_data/ssh_keys/cert_host_cert.pub",
+        "private_key": "nessus/tests/api/plugins/test_data/ssh_keys/cert_host_priv_key",
+        "target": "172.26.17.77"
+    }
+}

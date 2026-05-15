@@ -1,0 +1,31 @@
+{
+	"uuid":"",
+	"settings": {
+		"acls": [
+			{
+				"object_type": "scan",
+				"permissions": 0,
+				"type": "default"
+			},
+			{
+				"display_name": "",
+				"id": "",
+				"name": "",
+				"object_type": "scan",
+				"owner": "",
+				"permissions": 128,
+				"type": "user"
+			}
+		],
+		"description": "",
+		"emails": "",
+		"enabled": false,
+		"file_targets": "",
+		"launch_now": false,
+		"name": "",
+		"policy_id": "",
+		"scanner_id": "1",
+		"text_targets": "",
+		"use_dashboard": ""
+	}
+}

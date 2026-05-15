@@ -1,0 +1,307 @@
+{
+    "notifications": [
+        {
+            "id": 0,
+            "title": "Always present",
+            "message": "This notification is present on all platforms",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Constraint LINUX",
+            "message": "This notification is present on Linux",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0,
+            "constraints": [
+                {
+                    "type": "platform",
+                    "value": "LINUX"
+                }
+            ]
+        },
+        {
+            "id": 0,
+            "title": "Constraint DARWIN",
+            "message": "This notification is present on MacOS",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0,
+            "constraints": [
+                {
+                    "type": "platform",
+                    "value": "DARWIN"
+                }
+            ]
+        },
+        {
+            "id": 0,
+            "title": "Constraint WINDOWS",
+            "message": "This notification is present on Windows",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0,
+            "constraints": [
+                {
+                    "type": "platform",
+                    "value": "WINDOWS"
+                }
+            ]
+        },
+        {
+            "id": 0,
+            "title": "Constraint FREEBSD",
+            "message": "This notification is present on FreeBSD",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0,
+            "constraints": [
+                {
+                    "type": "platform",
+                    "value": "FREEBSD"
+                }
+            ]
+        },
+        {
+            "id": 0,
+            "title": "Never present",
+            "message": "This is never shown because the platform never matches.",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0,
+            "constraints": [
+                {
+                    "type": "platform",
+                    "value": "XYZ"
+                }
+            ]
+        },
+        {
+            "id": 0,
+            "title": "Ack Me",
+            "message": "This notification exists to be acknowledged.",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Ack Me 1",
+            "message": "This notification exists to be acknowledged and duration is 30 seconds.",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 30
+        },
+        {
+            "id": 0,
+            "title": "Ack Me 2",
+            "message": "This notification exists to be acknowledged and duration is 40 seconds.",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 40
+        },
+        {
+            "id": 0,
+            "title": "Ack Me-test history",
+            "message": "This notification exists to be acknowledged for test history.",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Ack Me - test last_modified",
+            "message": "This notification exists to be acknowledged.",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Ack Me - test last_modified - expire in 6 seconds",
+            "message": "This notification exists to be acknowledged and duration is 6 seconds.",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 6
+        },
+        {
+            "id": 0,
+            "title": "Expired",
+            "message": "This notification was already expired.",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 1550882789
+        },
+        {
+            "id": 0,
+            "title": "Inactive",
+            "message": "This notification is not yet active.",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 2145942000,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Active",
+            "message": "This notification is not yet expired.",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 2145942000
+        },
+        {
+            "id": 0,
+            "title": "ZeroActive",
+            "message": "This notification is not yet expired.",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": 0,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Permanent",
+            "message": "This notification is not yet expired.",
+            "severity": "critical",
+            "permanent": true,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Modal Medium",
+            "message": "Modal Medium.",
+            "severity": "medium",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Modal Low",
+            "message": "Modal Low.",
+            "severity": "low",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Modal High",
+            "message": "Modal High.",
+            "severity": "high",
+            "permanent": false,
+            "type": "modal",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Banner Medium",
+            "message": "Banner Medium.",
+            "severity": "medium",
+            "permanent": false,
+            "type": "banner",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Banner Low",
+            "message": "Banner Low.",
+            "severity": "low",
+            "permanent": false,
+            "type": "banner",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Banner High",
+            "message": "Banner High.",
+            "severity": "high",
+            "permanent": false,
+            "type": "banner",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Banner Permanent",
+            "message": "Banner Permanent.",
+            "severity": "info",
+            "permanent": true,
+            "type": "banner",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Login Medium",
+            "message": "Login Medium.",
+            "severity": "medium",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Login Low",
+            "message": "Login Low.",
+            "severity": "low",
+            "permanent": true,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0
+        },
+        {
+            "id": 0,
+            "title": "Login High",
+            "message": "Login High.",
+            "severity": "high",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0
+        }
+    ]
+}

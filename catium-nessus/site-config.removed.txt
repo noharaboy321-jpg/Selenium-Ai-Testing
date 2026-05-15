@@ -1,0 +1,16 @@
+#### site-config.ini files have moved!
+## -----------------------
+## site-config.ini files are no longer specified in project repository but in common configuration repository:
+## https://stash.corp.tenablesecurity.com/projects/AUT/repos/automation-configuration/browse/site-configuration
+##
+
+#### How will this affect me?
+## - You can change configuration files like site-config.ini and suite files without need to go through pull requests
+## - Files will be used from configuration repository. If file is not found from the repo but is present in project
+## repositori it will be used instead for the migration period
+
+
+#### FOR DEBUGGING AND TESTING BEFORE PUSHING CHANGES:
+## To use a local file in for example branch testing:
+## - add path to file (e.g. site-config.ini) to product.ini file: site-config-path = path/to/file
+## - use CAT_SITE_CONFIG_PATH=path/to/file environment variable

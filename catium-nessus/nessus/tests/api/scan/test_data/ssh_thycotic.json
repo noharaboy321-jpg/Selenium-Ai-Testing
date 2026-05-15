@@ -1,0 +1,20 @@
+{
+    "add": {
+        "Host": {
+            "SSH":[{
+              "auth_method": "Thycotic Secret Server",
+              "thycotic_ssl_verify": "yes",
+              "thycotic_private_key": "no",
+              "thycotic_domain": "",
+              "thycotic_organization": "",
+              "thycotic_password": "test",
+              "thycotic_username": "test",
+              "thycotic_url": "test",
+              "thycotic_secret_name": "test",
+              "username": "test"
+            }]
+        }
+    },
+    "edit": {},
+    "delete":[]
+}

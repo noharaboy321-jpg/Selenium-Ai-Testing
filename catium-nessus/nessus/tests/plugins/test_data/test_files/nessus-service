@@ -1,0 +1,2 @@
+#!/bin/bash
+touch yes-the-fake-nessus-service-ran

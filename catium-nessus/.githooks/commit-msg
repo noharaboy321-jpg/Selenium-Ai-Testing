@@ -1,0 +1,26 @@
+#!/bin/sh
+
+#
+# Prepends the "JIRA-nnnn" ticket number to commit messages.
+#
+# To activate, run `ln -s ../../.githooks/commit-msg .git/hooks/`
+#
+
+msgfile=$1
+
+### abort if empty message
+if ! grep -q '^[^#]' "$msgfile"; then
+    echo "Empty commit message, aborting" 1>&2
+    exit 1
+fi
+
+### prepend ticket number from branch if not present
+ticket=$(git rev-parse --abbrev-ref HEAD)
+# change "optional/LETTERS-numbers-whatever" to "LETTERS-numbers", or set to nothing if not matched
+ticket=$(echo "$ticket" | perl -ne 's,(?:.*/|^)([A-Z]+-[0-9]+).*,$1, && print')
+# if ticket is non-empty and isn't already in commit msg, add it
+if [ -n "$ticket" ] && ! grep -q "^$ticket" "$msgfile"; then
+    printf "$ticket: " > "$msgfile.new"
+    cat "$msgfile" >> "$msgfile.new"
+    mv "$msgfile.new" "$msgfile"
+fi

@@ -1,0 +1,141 @@
+@Library('tenable.common')
+import com.tenable.jenkins.*
+import com.tenable.jenkins.builds.*
+import com.tenable.jenkins.Constants
+import com.tenable.jenkins.common.Common
+
+Common common = new Common(this)
+
+String targetOS = "OracleLinux8"
+
+BuildParams defaultParams = new BuildParams(this)
+defaultParams.pytestCreateHtmlReport = false
+defaultParams.pytestOptions = '-p catium.plugins.xdist_variables --reruns=2 --reruns-delay=0 --ignore=nessus/tests/api/scanner_health/test_scanner_health_endpoints.py'
+defaultParams.pytestTestPaths = ['nessus/tests/logs']
+defaultParams.retryCount = 0
+defaultParams.timeout = 600
+defaultParams.productName         = "Nessus"
+defaultParams.teamName            = "QE-Nessus"
+defaultParams.testCategory        = "REGR"
+defaultParams.suiteType           = "LOGS"
+defaultParams.platform            = "OracleLinux8"
+
+def projectProperties = [
+        [$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', numToKeepStr: '100']], disableResume(),
+        [$class: 'ParametersDefinitionProperty',
+            parameterDefinitions: [
+                [$class: 'StringParameterDefinition', name: 'NESSUS_BUILD_BRANCH']
+            ]
+        ]
+]
+
+properties(projectProperties)
+
+String sanitized_branch_name = params.NESSUS_BUILD_BRANCH.replaceAll("/", "-").replaceAll("%2F", "-")
+echo "Sanitized branch name is: ${sanitized_branch_name}"
+
+currentBuild.displayName += "@ nessus_engine_logs_tests"
+
+// set Nessus build branch to display on Jenkins build page
+List buildDescription = ["<h5> ${sanitized_branch_name} </h5>"]
+this.currentBuild.description = common.getCauseDescriptions()
+this.currentBuild.description += '\n' + buildDescription.join('\n')
+
+Map defaultVars = [
+	"CAT_LOG_LEVEL_CONSOLE": "INFO",
+	"CAT_LOG_LEVEL": "DEBUG",
+	"CAT_NESSUS_CLI_LOCAL": "False"
+]
+
+Map testsConfig = [
+    'Nessus Manager': [
+        OracleLinux8: [type: "manager", marker: "'nessus_manager and not flaky_test and not standalone and not update and not docker and not skip_pro_scan_api_disabled and not license_change'"],
+    ],
+    'Nessus Pro': [
+        OracleLinux8: [type: "pro", marker: "'nessus_pro and not flaky_test and not standalone and not update and not skip_pro_scan_api_disabled and not license_change'"],
+    ],
+    'Nessus Home': [
+        OracleLinux8: [type: "home", marker: "'nessus_home and not flaky_test and not standalone and not update and not skip_pro_scan_api_disabled and not license_change'"],
+    ]
+]
+
+Map testers = [:]
+
+node(Constants.DOCKERNODE) {
+    stage("Download Artifacts") {
+        sh 'mkdir -p test_build'
+
+        tenableCopyRemoteArtefacts(
+            filter: "Nessus-*es8.x86_64.rpm",
+            projectName: "teams-nessus/nessus/nessus_build/${params.NESSUS_BUILD_BRANCH}",
+            stable: true,
+            target: "test_build",
+            flatten: true
+        )
+
+        sh 'ls test_build'
+        withCredentials([[$class : 'UsernamePasswordMultiBinding',
+                                    credentialsId : 'raw-uploader',
+                                    usernameVariable : 'jenkins_nexus_username',
+                                    passwordVariable : 'jenkins_nexus_password']])
+        {
+            sh "curl -s -u ${this.jenkins_nexus_username}:${this.jenkins_nexus_password} --upload-file test_build/Nessus-[0-9]*.[0-9]*.[0-9]*-es8.x86_64.rpm https://nexus.cloud.aws.tenablesecurity.com/repository/product-release/nessus/branch-builds/${sanitized_branch_name}/Nessus-dev-es8.x86_64.rpm"
+            echo "Successfully pushed CentOS 7 installer into Nexus."
+        }
+
+    }
+}
+
+testsConfig.each { String testType, OSConfig ->
+    OSConfig.each { String os, config ->
+        if (os == targetOS) {
+            testers["${testType}_${os}"] = {
+                node(Constants.DOCKERNODE) {
+                    BuildsCommon buildsCommon = new BuildsCommon(this)
+                    buildsCommon.cleanup()
+
+                    withOnDemandTestEnv(
+                        OS: 'oraclelinux8',
+                        awsInstanceType: 'c5.2xlarge',
+                        instanceCount: 3,
+                        diskSize: 80,
+                        playbookExtraVars: ['user_data_wait': '45', 'plugin_server_host': 'plugins-internal-staging.cloud.aws.tenablesecurity.com', 'plugin_server_api': "https://plugins-internal-staging.cloud.aws.tenablesecurity.com/keygen/json.generate.php"],
+                        nessusType: "${config.type}",
+                        packageUrl: "https://nexus.cloud.aws.tenablesecurity.com/repository/product-release/nessus/branch-builds/${sanitized_branch_name}/Nessus-dev-es8.x86_64.rpm",
+                        product: 'nessus',
+                    )   {
+                            echo "Nessus installed and running on IP ${TEST_ENV_IPS}"
+                            stage("${testType}_Tests") {
+
+                                    Map env_vars = defaultVars.clone()
+                                    env_vars = [
+                                        CAT_SITE            : 'Ondemand',
+                                        CAT_SSH_USERNAME    : 'qa',
+                                        CAT_SSH_USE_SUDO    : 'true',
+                                        CAT_NESSUS_CLI_LOCAL: 'false',
+                                        CAT_NESSUS_VERSION  : config.type,
+                                        CAT_TIO_URL         : 'qa-staging.cloud.aws.tenablesecurity.com',
+                                        ]
+
+                                    AutomationDirectBuild builder = new AutomationDirectBuild(this)
+                                    common.copyProperties(defaultParams, builder.parameters)
+                                    builder.parameters.pytestAWSAutomationRoleDuration = 36000
+                                    builder.parameters.pytestOptions += " -m ${config.marker} --xdist-hosts ${TEST_ENV_IPS}"
+                                    builder.parameters.setPytestParallelName("${config.type}")
+                                    builder.parameters.setAutomationEnvironment(env_vars)
+                                    builder.parameters.pytestSshAgents = ['ODE-privkey']
+                                    builder.execute(createNode: false)
+                                }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+parallel(testers)
+
+// set Nessus build branch to display on Jenkins build page
+List buildDescriptionLast = ["<h5> ${sanitized_branch_name} </h5>"]
+this.currentBuild.description = common.getCauseDescriptions()
+this.currentBuild.description += '\n' + buildDescriptionLast.join('\n')

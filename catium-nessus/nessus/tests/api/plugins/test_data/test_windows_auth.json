@@ -1,0 +1,81 @@
+{
+    "win_password": {
+        "username": "administrator",
+        "password": "sapphire",
+        "domain": "",
+        "target": "172.26.22.221",
+        "plugin_id": "10394"
+    },
+    "thycotic_pass": {
+        "plugin_id": "10394",
+        "username": "admin",
+        "secretName": "APIwintest",
+        "url": "http://172.26.22.209/SecretServer",
+        "login": "QA",
+        "password": "Testing3",
+        "target": "172.26.22.221"
+    },
+    "thycotic_fail": {
+        "plugin_id": "10394",
+        "username": "admin1",
+        "secretName": "APIwintest",
+        "url": "http://172.26.22.209/SecretServer",
+        "login": "QA",
+        "password": "Testing3",
+        "target": "172.26.22.221"
+    },
+    "win_domain_password": {
+        "username": "ccjones",
+        "password": "Sapphire@",
+        "domain": "qatenable",
+        "target": "172.26.16.157",
+        "bad_password": "badpass",
+        "plugin_id": "10394"
+    },
+    "kerberos": {
+        "username": "admin",
+        "password": "LabPass1",
+        "kdc": "npwwin2k12r2ker.labwinkerberos.lab.tenablesecurity.com",
+        "kdc_port": "88",
+        "kdc_transport": "tcp",
+        "domain": "LABWINKERBEROS",
+        "plugin_id": "10394",
+        "target": "labkerbwinmemb.lab.tenablesecurity.com"
+    },
+    "beyondtrust": {
+        "target": "172.26.22.221",
+        "host": "172.26.26.184",
+        "port": 443,
+        "ssl": true,
+        "ssl_verify": false,
+        "api_key": "4631d11ff54feaa6c6feaff7060ca226d5d8e19ac0d22cf3386741c8eaa31d93fa6ee683cf64ff5715425cd77bf3601bfb9949d2f05f9020987f2a6623155723",
+        "username": "administrator",
+        "duration_minutes": 0,
+        "plugin_id": "10394"
+    },
+    "lieberman": {
+        "target":"172.26.22.221",
+        "host":"172.26.27.78",
+        "port": 80,
+        "ssl": false,
+        "ssl_verify": false,
+        "pam_user": "asd",
+        "pam_password": "zxc",
+        "username" : "administrator",
+        "domain" : "lab",
+        "plugin_id":"10394"
+    },
+    "cyberark": {
+        "target": "172.26.22.221",
+        "username": "administrator",
+        "host": "172.26.22.204",
+        "safe": "Unix Accounts",
+        "app_id": "Nessus",
+        "folder_id": "Root",
+        "use_ssl": false,
+        "verify_ssl": false,
+        "port": "80",
+        "elevate_privileges": "Nothing",
+        "plugin_id": "10394"
+    }
+}

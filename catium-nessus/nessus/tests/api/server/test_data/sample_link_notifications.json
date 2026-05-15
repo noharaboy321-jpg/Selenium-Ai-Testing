@@ -1,0 +1,61 @@
+{
+    "notifications": [
+        {
+            "id": 1,
+            "title": "modal text",
+            "message": "This notification <b>does not</b> support HTML",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": "1554244762"
+        },
+        {
+            "id": 2,
+            "title": "modal html",
+            "message": "XXX IF YOU SEE THIS MESSAGE WE HAVE FAILED",
+            "html_message": "This notification <b>does</b> support HTML: <a target=_blank href='https://www.tenable.com/'>link</a>",
+            "severity": "critical",
+            "permanent": false,
+            "type": "modal",
+            "active": "1554244762"
+        },
+        {
+            "id": 3,
+            "title": "banner text",
+            "message": "This notification <b>does not</b> support HTML",
+            "severity": "critical",
+            "permanent": false,
+            "type": "banner",
+            "active": "1554244762"
+        },
+        {
+            "id": 4,
+            "title": "banner html",
+            "message": "XXX IF YOU SEE THIS MESSAGE WE HAVE FAILED",
+            "html_message": "This notification <b>does</b> support HTML: <a target=_blank href='https://www.tenable.com/'>link</a>",
+            "severity": "critical",
+            "permanent": false,
+            "type": "banner",
+            "active": "1554244762"
+        },
+        {
+            "id": 5,
+            "title": "login text",
+            "message": "This notification <b>does not</b> support HTML",
+            "severity": "critical",
+            "permanent": false,
+            "type": "login",
+            "active": "1554244762"
+        },
+        {
+            "id": 6,
+            "title": "login html",
+            "message": "XXX IF YOU SEE THIS MESSAGE WE HAVE FAILED",
+            "html_message": "This notification <b>does</b> support HTML: <a target=_blank href='https://www.tenable.com/'>link</a>",
+            "severity": "critical",
+            "permanent": false,
+            "type": "login",
+            "active": "1554244762"
+        }
+    ]
+}

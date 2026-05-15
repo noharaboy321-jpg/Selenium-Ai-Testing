@@ -1,0 +1,67 @@
+{
+ "manifest_version": 1,
+ "versions": [
+  {
+   "version": "99.0.0",
+   "hard_restart": true,
+   "notes": "http://www.tenable.com/new-in-nessus"
+  }
+ ],
+ "files": [
+  {
+   "file": "audit_warehouse.audit",
+   "location": 0,
+   "replace_self": true
+  },
+  {
+   "file": "nessusd",
+   "location": 6,
+   "replace_self": true
+  },
+  {
+   "file": "nessuscli",
+   "location": 6,
+   "replace_self": true
+  },
+  {
+   "file": "nessus-service",
+   "location": 6,
+   "replace_self": true
+  },
+  {
+   "file": "nasl",
+   "location": 16,
+   "replace_self": false
+  },
+  {
+   "file": "ndbg",
+   "location": 16,
+   "replace_self": false
+  },
+  {
+   "file": "nessusd.exe",
+   "location": 6,
+   "replace_self": true
+  },
+  {
+   "file": "nessuscli.exe",
+   "location": 6,
+   "replace_self": true
+  },
+  {
+   "file": "nessus-service.exe",
+   "location": 6,
+   "replace_self": true
+  },
+  {
+   "file": "nasl.exe",
+   "location": 16,
+   "replace_self": false
+  },
+  {
+   "file": "ndbg.exe",
+   "location": 16,
+   "replace_self": false
+  }
+ ]
+}

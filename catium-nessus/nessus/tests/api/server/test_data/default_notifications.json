@@ -1,0 +1,340 @@
+{
+    "notifications": [
+        {
+            "id": 100,
+            "title": "License Expiring Soon",
+            "html_message": "Your license will expire in ${license_expiration_days}, on ${license_expiration_date}. <a href='https://www.tenable.com/product-redirect/nessus/renewal' target='_blank'>Renew Nessus</a>",
+            "severity": "info",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "professional"
+                }, {
+                    "type": "is_eval",
+                    "value": false
+                }, {
+                    "type": "license_expiration_days",
+                    "value": "<91"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": ">60"
+                }]
+            }]
+        },
+        {
+            "id": 101,
+            "title": "License Expiring Soon",
+            "html_message": "Your license will expire in ${license_expiration_days}, on ${license_expiration_date}. <a href='https://www.tenable.com/product-redirect/nessus/renewal' target='_blank'>Renew Nessus</a>",
+            "severity": "info",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "professional"
+                }, {
+                    "type": "is_eval",
+                    "value": false
+                }, {
+                    "type": "license_expiration_days",
+                    "value": "<61"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": ">30"
+                }]
+            }]
+        },
+        {
+            "id": 102,
+            "title": "License Expiring Soon",
+            "html_message": "Your license will expire in ${license_expiration_days}, on ${license_expiration_date}. <a href='https://www.tenable.com/product-redirect/nessus/renewal' target='_blank'>Renew Nessus</a>",
+            "severity": "info",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "professional"
+                }, {
+                    "type": "is_eval",
+                    "value": false
+                }, {
+                    "type": "license_expiration_days",
+                    "value": "<11"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": ">0"
+                }]
+            }]
+        },
+        {
+            "id": 103,
+            "title": "License Expired",
+            "html_message": "Your license has expired today, ${license_expiration_date}. <a href='https://www.tenable.com/product-redirect/nessus/renewal' target='_blank'>Renew Nessus</a>",
+            "severity": "critical",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "professional"
+                }, {
+                    "type": "is_eval",
+                    "value": false
+                }, {
+                    "type": "license_expiration_days",
+                    "value": "0"
+                }]
+            }]
+        },
+        {
+            "id": 104,
+            "title": "License Expired",
+            "html_message": "Your license expired on ${license_expiration_date} (${license_expiration_days_past} ago). <a href='https://www.tenable.com/product-redirect/nessus/renewal' target='_blank'>Renew Nessus</a>",
+            "severity": "critical",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "professional"
+                }, {
+                    "type": "is_eval",
+                    "value": false
+                }, {
+                    "type": "license_expiration_days",
+                    "value": "<0"
+                }]
+            }]
+        },
+        {
+            "id": 105,
+            "title": "License Expiring Soon",
+            "html_message": "Your trial will expire in ${license_expiration_days}, on ${license_expiration_date}. To unlock more features and continue using Nessus Pro beyond your Trial, <a data-action='buy-pro' href='https://www.tenable.com/product-redirect/nessus/cb/buy' target='_blank'>Purchase Now</a>",
+            "severity": "info",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "professional"
+                }, {
+                    "type": "is_eval",
+                    "value": true
+                }, {
+                    "type": "license_expiration_days",
+                    "value": ">0"
+                }]
+            }]
+        },
+        {
+            "id": 106,
+            "title": "License Expired",
+            "html_message": "Your trial expired on ${license_expiration_date}. To unlock full access to Nessus Pro, <a data-action='buy-pro' href='https://www.tenable.com/product-redirect/nessus/cb/buy' target='_blank'>Purchase Now</a>",
+            "severity": "critical",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "professional"
+                }, {
+                    "type": "is_eval",
+                    "value": true
+                }, {
+                    "type": "license_expiration_days",
+                    "value": "<1"
+                }]
+            }]
+        },
+        {
+            "id": 107,
+            "title": "License Expiring Soon",
+            "message": "Your license will expire in ${license_expiration_days}, on ${license_expiration_date}. Please renew your license for Nessus Essentials by logging into the community portal and requesting a new license.",
+            "severity": "info",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "home"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": "<30"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": ">0"
+                }]
+            }]
+        },
+        {
+            "id": 108,
+            "title": "License Expired",
+            "message": "Your license has expired. Please renew your license for Nessus Essentials by logging into the community portal and requesting a new license.",
+            "severity": "critical",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "home"
+                },{
+                    "type": "license_expiration_days",
+                    "value": "<1"
+                }]
+            }]
+        },
+        {
+            "id": 109,
+            "title": "License Expiring Soon",
+            "html_message": "Your license will expire in ${license_expiration_days}, on ${license_expiration_date}. <a href='https://www.tenable.com/product-redirect/nessus/renewal' target='_blank'>Renew Nessus</a>",
+            "severity": "info",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "manager"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": "<91"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": ">60"
+                }]
+            }]
+        },
+        {
+            "id": 110,
+            "title": "License Expiring Soon",
+            "html_message": "Your license will expire in ${license_expiration_days}, on ${license_expiration_date}. <a href='https://www.tenable.com/product-redirect/nessus/renewal' target='_blank'>Renew Nessus</a>",
+            "severity": "info",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "manager"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": "<61"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": ">30"
+                }]
+            }]
+        },
+        {
+            "id": 111,
+            "title": "License Expiring Soon",
+            "html_message": "Your license will expire in ${license_expiration_days}, on ${license_expiration_date}. <a href='https://www.tenable.com/product-redirect/nessus/renewal' target='_blank'>Renew Nessus</a>",
+            "severity": "info",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "manager"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": "<11"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": ">0"
+                }]
+            }]
+        },
+        {
+            "id": 112,
+            "title": "License Expired",
+            "html_message": "Your license has expired today, ${license_expiration_date}. <a href='https://www.tenable.com/product-redirect/nessus/renewal' target='_blank'>Renew Nessus</a>",
+            "severity": "critical",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "manager"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": "0"
+                }]
+            }]
+        },
+        {
+            "id": 113,
+            "title": "License Expired",
+            "html_message": "Your license expired on ${license_expiration_date} (${license_expiration_days_past} ago). <a href='https://www.tenable.com/product-redirect/nessus/renewal' target='_blank'>Renew Nessus</a>",
+            "severity": "critical",
+            "permanent": false,
+            "type": "login",
+            "active": 1544652455,
+            "expires": 0,
+            "acknowledge_duration_seconds": 2678400,
+            "constraints": [{
+                "type": "and",
+                "value": [{
+                    "type": "license_type",
+                    "value": "manager"
+                }, {
+                    "type": "license_expiration_days",
+                    "value": "<0"
+                }]
+            }]
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+@Library('tenable.common')
+import com.tenable.jenkins.*
+import com.tenable.jenkins.builds.*
+import com.tenable.jenkins.Constants
+import com.tenable.jenkins.common.Common
+
+Common common = new Common(this)
+
+def projectProperties = [
+    [$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', numToKeepStr: '100']], disableResume(),
+]
+
+properties(projectProperties)
+
+String targetOS = 'amazonlinux2023arm'
+String nessusBuildBranch = 'release-next'
+String catiumBranch = 'release-next'
+
+def nessusTests
+
+node(Constants.DOCKERNODE) {
+    BuildsCommon buildsCommon = new BuildsCommon(this)
+    buildsCommon.cleanup()
+    checkout scm
+    def rootDir = pwd()
+    echo "Root directory is: ${rootDir}"
+    nessusTests = load "${rootDir}/pipelines/ui_pipelines/upgrades_feed/upgradeFeed.groovy"
+}
+
+nessusTests.runUIUpgradeFeed(targetOS, nessusBuildBranch, catiumBranch)
