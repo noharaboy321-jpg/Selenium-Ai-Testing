@@ -4,7 +4,6 @@ Blackout window related tests (When agent is linked to Nessus Manager via cluste
 :copyright: Tenable Network Security, 2019
 :date: Aug 14, 2020
 :last_modified: Dec 14, 2020
-:author: @vsoni, @kpanchal
 """
 import subprocess
 from contextlib import contextmanager
