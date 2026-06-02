@@ -1,0 +1,158 @@
+ACT AS: DevOps Engineer with QA automation expertise
+
+TASK: Create Azure DevOps YAML pipeline for Selenium Python tests
+
+REQUIREMENTS:
+1. Trigger on push to main branch and pull requests
+2. Use ubuntu-latest agent pool
+3. Install Python 3.10
+4. Install dependencies from requirements.txt
+5. Install Chrome browser and ChromeDriver
+6. Run pytest tests with HTML report generation
+7. Upload test report as artifact
+8. Include quality gate (fail if tests fail)
+9. Add parallel test execution capability
+10. Include variables for environment configuration
+
+OUTPUT: Complete YAML pipeline code + explanation of each section
+
+##############################
+
+ACT AS: DevOps Engineer with QA automation expertise
+
+TASK: Create GitHub Actions YAML pipeline for running Selenium tests
+
+REQUIREMENTS:
+1. Pipeline should:
+   - Run on push to main branch
+   - Run on pull request
+   - Install Python 3.10+
+   - Install dependencies from requirements.txt
+   - Run pytest tests
+   - Upload HTML test report as artifact
+   - Fail pipeline if test coverage < 80%
+
+2. Include:
+   - YAML code for .github/workflows/qa-pipeline.yml
+   - requirements.txt content
+   - Explanation of each step
+   - How to view test results in GitHub
+
+3. Bonus: Add parallel test execution for faster reporting
+
+OUTPUT: Complete YAML code + requirements.txt + setup instructions
+
+=======================================
+
+ACT AS: Senior QA Architect analyzing a codebase for test coverage
+
+TASK: Analyze this GitHub repository structure and provide:
+
+REPOSITORY: https://github.com/seleniumhq/selenium (or any test repo)
+
+REQUIRED OUTPUT:
+1. Application Architecture Summary
+   - What type of application is this? (Web, API, Mobile, Desktop)
+   - Tech stack (languages, frameworks, libraries)
+   - Directory structure breakdown
+
+2. Test Coverage Analysis
+   - What types of tests exist? (Unit, Integration, E2E, API)
+   - What's the test-to-code ratio?
+   - Which modules have LOW test coverage?
+
+3. Integration Points
+   - What external services/APIs does this integrate with?
+   - What are the critical data flows?
+   - Where are the potential failure points?
+
+4. Regression Impact Assessment
+   - If I change [specific component], what tests need to be re-run?
+   - What are the HIGH-RISK areas for regression?
+   - What test automation should be prioritized?
+
+5. AI-Assisted Test Generation Recommendations
+   - What test cases should be AUTOMATED first?
+   - What test data patterns exist?
+   - What edge cases are likely missing?
+
+Format: Markdown with sections, bullet points, and code examples
+
+===================
+Explain how self-healing automation works in AI-powered testing tools.
+Compare:
+1. Traditional Selenium (breaks when locator changes)
+2. AI-powered self-healing (auto-updates locators)
+
+Provide:
+- Technical explanation of how AI identifies elements
+- Real-world example with code
+- Tools that offer self-healing (Testim, Mabl, Healenium)
+- Pros and cons of each approach
+=============================
+Write a Python script using requests library to test REST API:
+- Endpoint: https://reqres.in/api/users
+- Test cases: GET all users, GET single user, POST new user, DELETE user
+- Include assertions for status codes, response time, data validation
+- Use pytest framework
+- Generate HTML report
+====================================
+Review this Selenium code I'm about to run. Identify:
+1. Any syntax errors in Python 3.10+
+2. Missing imports
+3. Incorrect locators (CSS selectors for the-internet.herokuapp.com/login)
+4. Missing WebDriverWait configurations
+5. Security issues (hardcoded passwords)
+6. Missing teardown/cleanup code
+7. Suggestions to improve maintainability
+
+Act as a Senior SDET doing code review.
+===================================
+ACT AS: Senior SDET with 10+ years Selenium automation experience
+
+TASK: Write a complete Selenium automation script in Python
+
+REQUIREMENTS:
+1. Use Page Object Model (POM) design pattern
+2. Test scenario: Login to https://the-internet.herokuapp.com/login
+3. Include:
+   - Page class with locators (using CSS selectors)
+   - Method to login with valid credentials
+   - Method to verify successful login
+   - Explicit waits (WebDriverWait)
+   - Proper error handling
+   - Meaningful assertions using pytest
+   - Test data as parameters (username, password)
+4. Use Python 3.10+ syntax
+5. Include comments explaining each section
+6. Add setup and teardown methods
+
+VALID CREDENTIALS:
+- Username: tomscript
+- Password: @Bes0tSide
+
+OUTPUT FORMAT: Complete Python code ready to run
+==========================
+ACT AS: Senior QA Automation Engineer
+
+USER STORY:
+"As a customer, I want to add items to my shopping cart and proceed to checkout 
+so that I can purchase products online."
+
+ACCEPTANCE CRITERIA:
+1. User can add multiple items to cart
+2. Cart shows item name, price, quantity, total
+3. User can update quantity (min 1, max 10)
+4. User can remove items from cart
+5. Checkout button is disabled if cart is empty
+6. Total price updates automatically when quantity changes
+7. Cart persists across browser sessions (if logged in)
+
+TASK:
+1. Generate 20 test cases (table format with Test ID, Description, Steps, Expected Result)
+2. Identify which are SUITABLE for automation vs manual testing
+3. Suggest automation framework structure (Page Object Model)
+4. List test data requirements
+
+FORMAT: Markdown
+=================================================
