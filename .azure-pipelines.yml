@@ -1,26 +1,22 @@
-# Azure DevOps Pipeline for Selenium Automation Tests
-# AI-Generated CI/CD Pipeline - FREE Tier
-# This pipeline runs Selenium tests on every code push
-
 trigger:
   branches:
     include:
-    - main
+      - main
   paths:
     include:
-    - AI_validation/test_loginPage.py
-    - AI_validation/test_reqres_api_FIXED.py
-    - requirements.txt
+      - AI_validation/test_loginPage.py
+      - AI_validation/test_reqres_api_FIXED.py
+      - requirements.txt
 
 pool:
-  vmImage: 'ubuntu-latest'  # FREE Microsoft-hosted agent
+  vmImage: ubuntu-latest
 
 variables:
   pythonVersion: '3.10'
 
 stages:
 - stage: Setup
-  displayName: '🔧 Setup Environment'
+  displayName: 'Setup Environment'
   jobs:
   - job: Setup
     displayName: 'Install Python and Dependencies'
@@ -29,38 +25,39 @@ stages:
       inputs:
         versionSpecification: '$(pythonVersion)'
         addToPath: true
-    
+
     - script: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-      displayName: '📦 Install Python Dependencies'
-    
+        python -m pip install -r requirements.txt
+      displayName: 'Install Python Dependencies'
+
     - script: |
         sudo apt-get update
         sudo apt-get install -y chromium-chromedriver
-      displayName: '🌐 Install Chrome Browser'
+      displayName: 'Install Chrome Browser'
 
 - stage: Test
-  displayName: '🧪 Run Selenium Tests'
+  displayName: 'Run Selenium Tests'
   dependsOn: Setup
   jobs:
   - job: RunTests
     displayName: 'Execute Automation Tests'
     steps:
     - script: |
-         python -m pytest AI_validation/test_loginPage.py AI_validation/test_reqres_api_FIXED.py -v --html=report.html --self-contained-html
-      displayName: '🚀 Run Selenium Tests with pytest'
-    
+
+        python -m pytest AI_validation/test_loginPage.py AI_validation/test_reqres_api_FIXED.py -v --html=report.html --self-contained-html
+      displayName: 'Run Selenium Tests with pytest'
+
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: 'report.html'
         ArtifactName: 'test-report'
         publishLocation: 'Container'
-      displayName: '📊 Upload HTML Test Report'
+      displayName: 'Upload HTML Test Report'
       condition: succeededOrFailed()
 
 - stage: QualityGate
-  displayName: '🛡️ Quality Gate'
+  displayName: 'Quality Gate'
   dependsOn: Test
   condition: succeeded()
   jobs:
@@ -72,4 +69,4 @@ stages:
         echo "✅ Quality Gate PASSED"
         echo "All tests executed successfully!"
         echo "======================================"
-      displayName: '✅ Quality Gate Check'
+      displayName: 'Quality Gate Check'
