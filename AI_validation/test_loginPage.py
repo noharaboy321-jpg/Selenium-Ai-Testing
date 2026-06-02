@@ -3,6 +3,7 @@ import pathlib
 import datetime
 
 import pytest
+from requests import options
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -150,9 +151,12 @@ def driver(request):
     # Allow running headless via environment variable HEADLESS=1
     headless = os.environ.get("HEADLESS", "0") in ("1", "true", "True")
     options = webdriver.ChromeOptions()
-    if headless:
-        options.add_argument("--headless=new")
-        options.add_argument("--disable-gpu")
+    options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--remote-debugging-port=9222")
 
     # Create driver using Selenium Manager (bundled with Selenium 4.6+)
     driver = webdriver.Chrome(options=options)
