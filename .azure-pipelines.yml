@@ -13,6 +13,7 @@ pool:
 
 variables:
   pythonVersion: '3.10'
+  HEADLESS: '1'
 
 jobs:
 - job: SeleniumTests
@@ -32,6 +33,13 @@ jobs:
       python -m pip install -r requirements.txt
       python -m pip list
     displayName: 'Install Python Dependencies'
+
+  - script: |
+      sudo apt-get update
+      sudo apt-get install -y chromium-browser
+      # ensure chromium binary is available as google-chrome for Selenium Manager
+      if [ -x "/usr/bin/chromium-browser" ]; then sudo ln -sf /usr/bin/chromium-browser /usr/bin/google-chrome; fi
+    displayName: 'Install Chromium (for ChromeDriver)'
 
   - script: |
       python -m pytest AI_validation/test_loginPage.py AI_validation/test_reqres_api_FIXED.py -v --html=report.html --self-contained-html
