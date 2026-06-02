@@ -1,0 +1,99 @@
+"""pages_container.py: A clean wrapper class to hold all 7 page objects of the application."""
+from pages.login_page import LoginPage
+from pages.dashboard_page import DashboardPage
+from pages.settings_page import SettingsPage
+from pages.profile_page import ProfilePage
+from pages.reports_page import ReportsPage
+from pages.billing_page import BillingPage
+from pages.help_page import HelpPage
+
+class App:
+    """A clean wrapper holding all 7 pages of the application."""
+    def __init__(self, driver):
+        self.login = LoginPage(driver)
+        self.dashboard = DashboardPage(driver)
+        self.settings = SettingsPage(driver)
+        self.profile = ProfilePage(driver)
+        self.reports = ReportsPage(driver)
+        self.billing = BillingPage(driver)
+        self.help = HelpPage(driver)
+
+
+
+"""conftest.py: Centralized fixture management for all page objects."""
+import pytest
+from selenium import webdriver
+from pages_container import App
+
+@pytest.fixture
+def app():
+    """Initializes the browser and bundles all 7 page objects cleanly."""
+    driver = webdriver.Chrome()
+    driver.maximize_window()
+    
+    # Instantiate the wrapper class
+    app_instance = App(driver)
+    
+    yield app_instance  # Passes control to the test file
+    
+    driver.quit()  # Cleans up the browser afterward
+
+"""test_login_page.py: A test case demonstrating seamless page interactions using the App wrapper."""
+def test_user_can_update_profile_settings(app):
+    # Seamlessly bounce between pages using the single 'app' gateway
+    app.login.load()
+    app.login.login_user("test_admin", "Password123")
+    
+    app.dashboard.navigate_to_profile()
+    app.profile.update_display_name("New Name")
+    
+    assert app.profile.get_success_message() == "Profile Updated"
+
+###########################################################################################################
+
+"""conftest.py: Centralized fixture management for all page objects."""
+import pytest
+from selenium import webdriver
+from pages.login_page import LoginPage
+from pages.billing_page import BillingPage
+
+@pytest.fixture
+def driver():
+    driver = webdriver.Chrome()
+    yield driver
+    driver.quit()
+
+# Explicitly define separate page injection points
+@pytest.fixture
+def login_page(driver): return LoginPage(driver)
+
+@pytest.fixture
+def billing_page(driver): return BillingPage(driver)
+
+
+"""test_login_page.py: A test case demonstrating direct page interactions without a wrapper.
+"""
+# The test only pulls into memory the exact page it needs to execute
+def test_billing_invoice_download(login_page, billing_page):
+    login_page.load()
+    login_page.quick_login()
+    
+    billing_page.load()
+    assert billing_page.is_invoice_present()
+
+
+#########################################################################################################
+
+
+# Inside pages/login_page.py
+from pages.dashboard_page import DashboardPage
+
+class LoginPage:
+    def __init__(self, driver):
+        self.driver = driver
+        self._login_button = (By.ID, "submit")
+
+    def click_login(self):
+        self.driver.find_element(*self._login_button).click()
+        # Page Chaining: Return the next page object context instantly
+        return DashboardPage(self.driver)

@@ -1,7 +1,0 @@
-{
-    "image": "ami-0f968e18",
-    "iamrole": "Scanners",
-    "snapshot": "snap-0f7a1079ef6fb3771",
-    "groups": ["sg-4974992e"],
-    "arn": "arn:aws:iam::422820575223:instance-profile/Scanners"
-}
