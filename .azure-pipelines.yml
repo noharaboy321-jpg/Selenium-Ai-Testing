@@ -48,7 +48,7 @@ stages:
     displayName: 'Execute Automation Tests'
     steps:
     - script: |
-        pytest AI_validation/test_loginPage.py AI_validation/test_reqres_api_FIXED.py -v --html=report.html --self-contained-html
+         python -m pytest AI_validation/test_loginPage.py AI_validation/test_reqres_api_FIXED.py -v --html=report.html --self-contained-html
       displayName: '🚀 Run Selenium Tests with pytest'
     
     - task: PublishBuildArtifacts@1
