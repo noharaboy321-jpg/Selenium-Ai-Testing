@@ -15,3 +15,5 @@ if __name__ == "__main__":
         results = pool.map(heavy_math_calculation, inputs)
     
     print(f"Executed parallel calculation across CPU cores in: {time.time() - start_time:.2f} seconds")
+    print("Results:", results)  
+    
