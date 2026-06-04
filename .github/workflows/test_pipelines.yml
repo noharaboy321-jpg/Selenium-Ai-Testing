@@ -34,3 +34,18 @@ jobs:
       with:
         name: test-report
         path: report.html
+
+# - script: |
+    # python -m pip install allure-pytest
+    # python -m pytest AI_validation/ --alluredir=allure-results
+    # allure generate allure-results --output allure-report
+    # allure open allure-report
+# - script: |
+#     python -m pip install allure-pytest
+#     python -m pytest AI_validation/ --alluredir=allure-results
+#     allure generate allure-results --output allure-report
+# - task: PublishPipelineArtifact@1
+#   inputs:
+#     targetPath: 'allure-report'
+#     artifact: 'allure-report'
+#     publishLocation: 'pipeline'

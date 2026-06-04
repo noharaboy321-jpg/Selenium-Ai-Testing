@@ -11,7 +11,7 @@ def find_second_largest_sort(nums):
 
 # Test cases
 print(find_second_largest_sort([10, 20, 4, 45, 99, 99]))  # Output: 45
-print(find_second_largest_sort([5, 5, 5]))               # Output: None4
+print(find_second_largest_sort([5, 5, 5]))               # Output: None
 
 ###########################3
 

@@ -42,13 +42,26 @@ jobs:
     displayName: 'Install Chromium (for ChromeDriver)'
 
   - script: |
+      # Create a directory for screenshots
+      mkdir -p test-screenshots
+      # Run tests with pytest and generate HTML report
       python -m pytest AI_validation/test_loginPage.py AI_validation/test_reqres_api_FIXED.py -v --html=report.html --self-contained-html
     displayName: 'Run Selenium Tests with pytest'
 
-  - task: PublishBuildArtifacts@1
+  # Publish screenshots (if any)
+  - task: PublishPipelineArtifact@1
     inputs:
-      PathtoPublish: 'report.html'
-      ArtifactName: 'test-report'
-      publishLocation: 'Container'
+      targetPath: 'test-screenshots'
+      artifact: 'screenshots'
+      publishLocation: 'pipeline'
+    condition: succeededOrFailed()
+    displayName: 'Publish Screenshots'
+
+  # Publish HTML report
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: 'report.html'
+      artifact: 'test-report'
+      publishLocation: 'pipeline'
     condition: succeededOrFailed()
     displayName: 'Publish HTML Report'
