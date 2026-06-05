@@ -1,18 +1,26 @@
-from selenium.webdriver.remote.webdriver import webDriver
-from selenium.webdriver.support.ui import WebDriverWait as webDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
 class BasePage:
-    def __init__(self, driver: webDriver):
+    BASE_URL = "https://example.com"   # replace with your site
+
+    def __init__(self, driver):
         self.driver = driver
-        self.wait = webDriverWait(self.driver,10)
+        self.wait = WebDriverWait(driver, 10)
 
-    def navigate_to(self, url_path: str):
-        self.driver.get(f'base_url/{url_path}')
-    
-    def click_on_element(self, locator: tuple):
-        self.wait.until(EC.element_to_be_clickable(locator)).click()
+    def find(self, locator):
+        return self.wait.until(EC.presence_of_element_located(locator))
 
-    def type_into_element(self, locator: tuple, text:str):
-        self.wait.until(EC.visibility_of_element_located(locator)).clear().send_keys(text)
+    def click(self, locator):
+        self.find(locator).click()
+
+    def type(self, locator, text):
+        element = self.find(locator)
+        element.clear()
+        element.send_keys(text)
+
+    def get_text(self, locator):
+        return self.find(locator).text
+
+    def navigate_to(self, path):
+        self.driver.get(self.BASE_URL + path)

@@ -27,7 +27,7 @@ jobs:
         pip install -r requirements.txt
     
     - name: Run tests
-      run: pytest test_login.py -v --html=report.html
+      run: pytest test_loginPage.py -v --html=report.html
     
     - name: Upload test report
       uses: actions/upload-artifact@v4
