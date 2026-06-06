@@ -6,6 +6,7 @@ trigger:
     include:
       - AI_validation/test_loginPage.py
       - AI_validation/test_reqres_api_FIXED.py
+      - sample_pom/test_login_page.py
       - requirements.txt
 
 pool:
@@ -45,7 +46,7 @@ jobs:
       # Create a directory for screenshots
       mkdir -p test-screenshots
       # Run tests with pytest and generate HTML report
-      python -m pytest AI_validation/test_loginPage.py AI_validation/test_reqres_api_FIXED.py -v --html=report.html --self-contained-html
+      python -m pytest AI_validation/test_loginPage.py AI_validation/test_reqres_api_FIXED.py sample_pom/test_login_page.py -v --html=report.html --self-contained-html
     displayName: 'Run Selenium Tests with pytest'
 
   # Publish screenshots (if any)
