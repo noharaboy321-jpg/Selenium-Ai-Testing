@@ -4,9 +4,9 @@ from base_page import BasePage
 class DashboardPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
-        self.url_path = "/dashboard"
+        self.url_path = "/logged-in-successfully/"
 
-    WELCOME_MSG = (By.ID, "welcomeMessage")
+    WELCOME_MSG = (By.XPATH, "//h1[text()='Logged In Successfully']")
 
     def load_page(self):
         self.navigate_to(self.url_path)

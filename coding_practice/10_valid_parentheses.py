@@ -15,4 +15,6 @@ def is_valid_string(s: str)-> bool:
             stack.append(char)
         
     return len(stack) == 0
-    
+#Input: "({[]})" → Output: True  
+print(is_valid_string("({[]})"))  # Output: True
+#Input: "({[})" → Output: False 

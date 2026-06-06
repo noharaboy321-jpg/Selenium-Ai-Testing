@@ -2,7 +2,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class BasePage:
-    BASE_URL = "https://example.com"   # replace with your site
+    BASE_URL = "https://practicetestautomation.com"   
 
     def __init__(self, driver):
         self.driver = driver
